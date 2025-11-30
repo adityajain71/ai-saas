@@ -78,24 +78,26 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Task updated to paid status:', updatedTask)
 
-    // Trigger AI evaluation asynchronously
+    // Trigger AI evaluation asynchronously  
     const baseUrl = process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000'
+      : `http://localhost:3000`
 
     console.log('🤖 Triggering evaluation at:', `${baseUrl}/api/evaluate`)
 
-    fetch(`${baseUrl}/api/evaluate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ taskId })
-    })
-      .then(res => {
-        console.log('✅ Evaluation triggered, status:', res.status)
-        return res.json()
+    // Call evaluation endpoint synchronously to ensure it completes
+    try {
+      const evalResponse = await fetch(`${baseUrl}/api/evaluate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId })
       })
-      .then(data => console.log('Evaluation response:', data))
-      .catch(err => console.error('❌ Failed to trigger evaluation:', err))
+      
+      const evalData = await evalResponse.json()
+      console.log('✅ Evaluation response:', evalResponse.status, evalData)
+    } catch (err) {
+      console.error('❌ Failed to trigger evaluation:', err)
+    }
 
     return NextResponse.json({
       success: true,
