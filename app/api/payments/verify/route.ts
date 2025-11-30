@@ -79,8 +79,9 @@ export async function POST(request: NextRequest) {
     console.log('✅ Task updated to paid status:', updatedTask)
 
     // Trigger AI evaluation asynchronously
-    // Always use localhost for internal server-to-server calls
-    const baseUrl = 'http://localhost:3000'
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000'
 
     fetch(`${baseUrl}/api/evaluate`, {
       method: 'POST',

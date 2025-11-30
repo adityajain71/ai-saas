@@ -135,10 +135,10 @@ console.log(fibonacci(10));"
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
             <h3 className="text-sm font-medium text-blue-800 mb-2">What happens next?</h3>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Your task will be saved with status "created"</li>
-              <li>• You'll be redirected to the payment page</li>
+              <li>• Your task will be saved with status &quot;created&quot;</li>
+              <li>• You&apos;ll be redirected to the payment page</li>
               <li>• After payment, our AI will evaluate your submission</li>
-              <li>• You'll receive detailed feedback and suggestions</li>
+              <li>• You&apos;ll receive detailed feedback and suggestions</li>
             </ul>
           </div>
           

@@ -252,7 +252,7 @@ function TaskPaymentContent({ params }: { params: { id: string } }) {
             </div>
             
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h3 className="text-sm font-medium text-blue-800 mb-2">What you'll get:</h3>
+              <h3 className="text-sm font-medium text-blue-800 mb-2">What you&apos;ll get:</h3>
               <ul className="text-sm text-blue-700 space-y-1">
                 <li>• Comprehensive AI-powered code analysis</li>
                 <li>• Detailed feedback and suggestions</li>
