@@ -78,26 +78,39 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Task updated to paid status:', updatedTask)
 
-    // Trigger AI evaluation asynchronously  
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : `http://localhost:3000`
-
-    console.log('🤖 Triggering evaluation at:', `${baseUrl}/api/evaluate`)
-
-    // Call evaluation endpoint synchronously to ensure it completes
-    try {
-      const evalResponse = await fetch(`${baseUrl}/api/evaluate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskId })
-      })
-      
-      const evalData = await evalResponse.json()
-      console.log('✅ Evaluation response:', evalResponse.status, evalData)
-    } catch (err) {
-      console.error('❌ Failed to trigger evaluation:', err)
-    }
+    // Trigger AI evaluation directly (import at top if needed)
+    const { evaluateTaskWithAI } = await import('@/lib/aiEvaluator')
+    
+    // Run evaluation immediately
+    setImmediate(async () => {
+      try {
+        console.log('🤖 Starting AI evaluation for task:', taskId)
+        
+        const evaluation = await evaluateTaskWithAI(updatedTask.task_text)
+        
+        // Insert evaluation result
+        await supabase.from('evaluations').insert([{
+          task_id: taskId,
+          score: evaluation.score,
+          strengths: evaluation.strengths.join(', '),
+          improvements: evaluation.improvements.join(', '),
+          full_report: {
+            overallFeedback: evaluation.overallFeedback,
+            strengths: evaluation.strengths,
+            improvements: evaluation.improvements,
+            score: evaluation.score
+          }
+        }])
+        
+        // Update task to evaluated
+        await supabase.from('tasks').update({ status: 'evaluated' }).eq('id', taskId)
+        
+        console.log('✅ Evaluation completed successfully')
+      } catch (err) {
+        console.error('❌ Evaluation failed:', err)
+        await supabase.from('tasks').update({ status: 'evaluation_failed' }).eq('id', taskId)
+      }
+    })
 
     return NextResponse.json({
       success: true,
