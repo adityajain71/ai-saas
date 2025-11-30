@@ -83,11 +83,19 @@ export async function POST(request: NextRequest) {
       ? `https://${process.env.VERCEL_URL}` 
       : 'http://localhost:3000'
 
+    console.log('🤖 Triggering evaluation at:', `${baseUrl}/api/evaluate`)
+
     fetch(`${baseUrl}/api/evaluate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ taskId })
-    }).catch(err => console.error('Failed to trigger evaluation:', err))
+    })
+      .then(res => {
+        console.log('✅ Evaluation triggered, status:', res.status)
+        return res.json()
+      })
+      .then(data => console.log('Evaluation response:', data))
+      .catch(err => console.error('❌ Failed to trigger evaluation:', err))
 
     return NextResponse.json({
       success: true,

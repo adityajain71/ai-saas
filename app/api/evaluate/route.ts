@@ -16,6 +16,14 @@ export async function POST(request: NextRequest) {
 
     console.log('🤖 Starting AI evaluation for task:', taskId)
 
+    if (!taskId) {
+      console.error('❌ No taskId provided')
+      return NextResponse.json(
+        { error: 'Missing taskId' },
+        { status: 400 }
+      )
+    }
+
     // Get task
     const { data: task, error: taskError } = await supabase
       .from('tasks')
