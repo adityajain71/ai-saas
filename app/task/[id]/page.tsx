@@ -89,6 +89,7 @@ function TaskDetailContent({ params }: { params: { id: string } }) {
     if (user && taskId) {
       fetchTaskAndEvaluation()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, taskId])
 
   // Auto-refresh when evaluation is in progress

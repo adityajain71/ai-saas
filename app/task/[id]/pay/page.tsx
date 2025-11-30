@@ -38,6 +38,7 @@ function TaskPaymentContent({ params }: { params: { id: string } }) {
         document.body.removeChild(script)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId])
 
   const fetchTask = async () => {
